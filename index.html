@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Google Menu</title>
+    <style>
+        *, :before, :after {
+            box-sizing: border-box;
+            transition: all 0.2s cubic-bezier(0.4,0,1,1);
+            font-family: sans,Arial,sans-serif;
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: white;
+        }
+        .header-wrapper {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            background: white;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* GLOBAL HEADER */
+        .header--global {
+            background: white;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            height: 56px;
+            padding: 0 24px;
+            width: 100%;
+        }
+        .nav-global {
+            margin-left: 20px;
+            font-size: 0; /* Remove Whitespace Between Inline-Block Elements */
+        }
+        .btn-menu {
+            display: none;
+        }
+        .link {
+            text-decoration: none;
+        }
+        .nav-global .link {
+            display: inline-block;
+            text-decoration: none;
+            color: #727276;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.3em;
+            padding: 0 12px;
+        }
+        .device-img {
+            display: none;
+        }
+        .img-logo {
+            height: 24px;
+            width: 24px;
+        }
+        .icon-wrapper {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+        .icon-wrapper .icon--search,
+        .icon-wrapper .icon--basket {
+            margin-right: 16px;
+            width: 24px;
+            height: 24px;
+            color: #727276;
+            fill: #727276;
+        }
+        .icon-wrapper  .icon--avatar {
+            border-color: transparent;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+        }
+
+        /* PRODUCT HEADER */
+        .header--product {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0 24px;
+            height: 64px;
+            width: 100%;
+            background: white;
+            position: relative;
+            z-index: 50;
+        }
+        .header--product.sticky {
+            box-shadow: 0 2px 10px 0 rgba(0,0,0,0.16);
+            height: 56px;
+        }
+        .sticky {
+            position: fixed;
+        }
+        .header--product.sticky .product-title {
+            font-size: 20px;
+        }
+        .product-title {
+            color: #828286;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 24px;
+        }
+        .pushDown {
+            top: 56px;
+        }
+        .pushUp {
+            top: 0;
+        }
+        .onTop {
+            z-index: 99;
+        }
+        .nav-product {
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translate(-50%);
+        }
+        .nav-product > .menu-label {
+            display: none;
+        }
+        .nav-product > .menu-item {
+            color: #727276;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 14px;
+            padding: 8px 12px;
+        }
+        .CTA-wrapper {
+            display: flex;
+            flex-direction: row;
+            margin-left: auto;
+        }
+        .CTA-text-wrapper {
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+            color: #727276;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 18px;
+        }
+        .CTA-btn {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 16px;
+            min-width: 76px;
+            padding: 10px 24px;
+            text-transform: none;
+            text-decoration: none;
+            background: #448aff;
+            color: #fff;
+            margin-left: 16px;
+        }
+        .CTA-btn:hover {
+            background-color: #2979ff;
+            box-shadow: 0 3px 12px 0 rgba(0,0,0,0.36);
+        }
+
+        /* HELPERS */
+        .white {
+            color: #555;
+        }
+        .p-25 {
+            padding: 25%;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeInDown {
+            0% {
+                /* opacity: 0; */
+                opacity: 1;
+                height: 0;
+                /* transform: scaleY(0);
+                transform-origin: top; */
+                /* transform: translate3d(0, 0, 0); */
+            }
+            
+            100% {
+                /* display: flex; */
+                /* transform: scaleY(1);
+                transform-origin: top; */
+                height: 320px;
+                /* transform: none; */
+            }
+        }
+
+        @keyframes fadeOutUp {
+            0% {
+                /* transform: scaleY(1);
+                transform-origin: top;            */
+                opacity: 1;
+                height: 320px;
+            }
+            25% {
+                opacity: .5;
+            }
+            100% {
+                opacity: 0;
+                height: 0;
+                /* transform: scaleY(0);
+                transform-origin: top;                 */
+                /* transform: translate3d(0, 0, 0); */
+                /* display: none; */
+            }
+        }
+
+
+        /* MEDIA QUERIES */
+        @media (max-width: 991px) {
+            .header--global {
+                height: 48px;
+                padding: 0 16px;
+            }
+            .btn-menu {
+                display: block;
+                margin-left: 24px;
+                cursor: pointer;
+            }
+            .btn-title {
+                color: #727276;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 1.3em;
+            }
+            .caret {
+                width: 12px;
+                margin-left: 8px;
+            }
+            .caret-line1,
+            .caret-lin2 {
+                stroke: #727276;
+                stroke-width: 16px;
+            }
+            .invert {
+                transform: rotate(180deg);
+            }
+            .nav-global {
+                background: white;
+                position: absolute;
+                top: 48px;
+                left: 0;
+                width: 100%;
+                margin-left: 0;
+                z-index: 99;
+                overflow: hidden;
+            }
+            .show {
+                box-shadow: 0 6px 6px 0 rgba(0,0,0,0.16);
+                animation-name: fadeInDown;
+                animation-duration: .2s;
+                animation-fill-mode: forwards;
+            }
+            .initial-hide {
+                display: none;
+            }
+            .hide {
+                animation-name: fadeOutUp;
+                animation-duration: .3s;
+                animation-fill-mode: forwards;
+            }
+            .nav-global > .nav-link-wrapper {
+                width: 90%;
+                height: 100%;
+                margin: 0 auto;
+                display: flex;
+                flex-direction: row;
+                /* justify-content: flex-start; */
+                justify-content: space-around;
+                align-items: baseline;
+                align-content: center;
+                flex-wrap: wrap;
+
+            }
+            .nav-global .link {
+                display: flex;
+                flex-direction: column;
+                flex-basis: content;
+                justify-content: center;
+                align-items: center;
+                margin: 8px 4px 16px;
+                text-align: center;
+                vertical-align: top;
+                width: 96px;
+            }
+            .device-img {
+                display: block;
+                width: 64px;
+                height: 64px;
+            }
+            .device-title {
+                color: #999;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 18px;
+                margin: 16px auto 0;
+                max-height: 36px;
+                overflow: hidden;
+            }
+            .pushDown {
+                top: 48px;
+            }
+            .header--product > .product-title {
+                font-size: 20px;
+                line-height: 20px;
+            }
+            .nav-product {
+                position: relative;
+                left: 0;
+                margin-left: auto;
+                transform: translate(0);
+                transition: none;
+                color: #727276;
+                font-size: 14px;
+                font-weight: 400;
+            } 
+            .nav-product > .menu-label {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                height: 100%;
+            }
+            .nav-product > .menu-label > .caret2 {
+                border-color: #727276 transparent;
+                border-style: solid;
+                border-width: 5px 5px 0 5px;
+                height: 0;
+                width: 0;
+                margin-left: 7px;
+            }
+            .nav-product > .menu-item {
+                display: none;
+            }
+            .nav-product.product-menu {
+                background: white;
+                position: relative;
+                transform: translateY(35%);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: auto;
+                box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14),0 3px 14px 2px rgba(0,0,0,0.12),0 5px 5px -3px rgba(0,0,0,0.2);
+                z-index: 101;
+                transition: none;
+            }
+            .nav-product.product-menu > .menu-item {
+                display: block;
+                width: 100%;
+                padding: 12px 32px 12px 12px;
+                color: #727276;
+                font-size: 14px;
+                font-weight: 400;
+                text-align: left;
+            }
+            .nav-product.product-menu > .menu-label.hide {
+                display: none;
+            }
+            .nav-product.product-menu > .menu-item.active {
+                background-color: #eeeeee;
+            }
+            .CTA-wrapper {
+                justify-content: space-between;
+                align-items: center;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 48px;
+                padding: 0 16px;
+                box-shadow: 0 -2px 10px 0 rgba(0,0,0,0.16);
+                background: white;
+            }
+            .CTA-text-wrapper {
+                font-size: 12px;
+                font-weight: 400;
+                line-height: 18px;
+                text-align: left;
+            }
+            .CTA-btn {
+                font-size: 14px;
+                line-height: 14px;
+                height: 32px;
+            }
+            .p-md-5 {
+                padding: 25% 5%;
+            }
+        }
+        /* old mobile devices*/
+        @media (max-width: 320px) { 
+            .header--product {
+                display: none;
+            }
+         }
+    </style>
+</head>
+
+<body>
+    <header class="header-wrapper">
+        <!-- global header -->
+        <div class="header--global">
+            <!-- logo -->
+            <a href="/" class="link">
+                <img class="img-logo" src="assets/images/logo.png" alt="google logo">
+            </a>
+
+            <div class="btn-menu">
+                <span class="btn-title">Browse</span>
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px"
+                viewBox="0 0 444.819 444.819" style="enable-background:new 0 0 444.819 444.819;" xml:space="preserve"
+                class="caret">
+                    <g>
+                        <path d="M434.252,114.203l-21.409-21.416c-7.419-7.04-16.084-10.561-25.975-10.561c-10.095,0-18.657,3.521-25.7,10.561   L222.41,231.549L83.653,92.791c-7.042-7.04-15.606-10.561-25.697-10.561c-9.896,0-18.559,3.521-25.979,10.561l-21.128,21.416   C3.615,121.436,0,130.099,0,140.188c0,10.277,3.619,18.842,10.848,25.693l185.864,185.865c6.855,7.23,15.416,10.848,25.697,10.848   c10.088,0,18.75-3.617,25.977-10.848l185.865-185.865c7.043-7.044,10.567-15.608,10.567-25.693   C444.819,130.287,441.295,121.629,434.252,114.203z"
+                        data-original="#000000" class="active-path" data-old_color="#000000" fill="#727276" />
+                    </g>
+                </svg>
+            </div>
+        
+            <!-- global navigation -->
+            <nav class="nav-global hide initial-hide">
+                <div class="nav-link-wrapper">
+                    <a href="#" class="link">
+                        <img class="device-img" src="assets/images/devices.png" alt="" >
+                        <span class="device-title">Phones</span>
+                    </a>
+                    <a href="#" class="link">
+                        <img class="device-img" src="assets/images/devices.png" alt="">
+                        <span class="device-title">Home & Entertainment</span>
+                    </a>
+                    <a href="#" class="link">
+                        <img class="device-img" src="assets/images/devices.png" alt="">
+                        <span class="device-title">Laptops</span>
+                    </a>
+                    <a href="#" class="link">
+                        <img class="device-img" src="assets/images/devices.png" alt="">
+                        <span class="device-title">Virtual Reality</span>
+                    </a>
+                    <a href="#" class="link">
+                        <img class="device-img" src="assets/images/devices.png" alt="">
+                        <span class="device-title">Accessories</span>
+                    </a>
+                </div>
+            </nav>
+
+            <!-- action icons -->
+            <div class="icon-wrapper">
+                <!-- search icon -->
+                <a href="#" class="link">
+                    <svg viewBox="0 0 24 24" class="icon--search">
+                        <path d="M15.5,14h-0.8l-0.3-0.3c1-1.1,1.6-2.6,1.6-4.2C16,5.9,13.1,3,9.5,3S3,5.9,3,9.5C3,13.1,5.9,16,9.5,16c1.6,0,3.1-0.6,4.2-1.6 l0.3,0.3v0.8l5,5l1.5-1.5L15.5,14z M9.5,14C7,14,5,12,5,9.5C5,7,7,5,9.5,5S14,7,14,9.5C14,12,12,14,9.5,14z"></path>
+                    </svg>
+                </a>
+
+                <!-- basket icon -->
+                <a href="#" class="link">
+                    <svg viewBox="0 0 24 24" class="icon--basket">
+                        <path d="M7,18c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S8.1,18,7,18z M1,4h2l3.6,7.6L5.2,14C5.1,14.3,5,14.7,5,15c0,1.1,0.9,2,2,2h12 v-2H7.4c-0.1,0-0.2-0.1-0.2-0.2c0,0,0-0.1,0-0.1L8.1,13h7.4c0.8,0,1.4-0.4,1.7-1l3.6-6.5C21,5.3,21,5.2,21,5c0-0.6-0.4-1-1-1H5.2 L4.8,3.1C4.5,2.5,3.8,2,3,2H1V4z M17,18c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S18.1,18,17,18z"></path>
+                    </svg>
+                </a>
+
+                <!-- avatar icon -->
+                <a href="#" class="link">
+                    <img class="icon--avatar" src="assets/images/avatar.png" alt="">
+                </a>
+            </div> <!-- /.icon-wrapper -->
+        </div> <!-- /.header--global -->
+
+        <!-- product header -->
+        <div class="header--product">
+            <h1 class="product-title">Google Pixelbook</h1>
+
+            <nav class="nav-product">
+                <div class="menu-label">
+                    <span class="menu-title-placeholder"></span>
+                    <span class="caret2"></span>
+                </div>
+                <a href="#" class="link active menu-item">Overview</a>
+                <a href="#" class="link menu-item">Tech Specs</a>
+                <a href="#" class="link menu-item">Setup & Learn</a>
+            </nav>
+
+            <div class="CTA-wrapper">
+                <div class="CTA-text-wrapper">
+                    <span>From $999 or $41.62/mo for 24 mos</span>
+                    <span>with 0% APR Google Store Financing*</span>
+                </div>
+                <a href="#" class="CTA-btn">Buy</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <p class="white p-25 p-md-5">
+             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at orci sed lacus tristique accumsan. Aenean a dolor vitae
+            quam consectetur porttitor imperdiet at dolor. Sed viverra lorem sit amet aliquet porttitor. Fusce et bibendum nunc. Morbi
+            bibendum, lectus vehicula sodales pulvinar, arcu nulla bibendum est, quis semper velit felis sit amet lorem. Nunc quis leo
+            imperdiet, condimentum nisl ut, laoreet turpis. Phasellus a orci nibh. Donec facilisis nisl velit. Quisque quis massa quis
+            mauris venenatis interdum. Morbi id nibh eu tortor lobortis congue. Nullam non quam auctor, pharetra risus elementum, mattis
+            urna. Nunc pulvinar interdum tortor quis ultrices. Fusce ultrices, orci non semper maximus, felis nunc porta mauris, quis
+            mollis mauris massa ac diam. Mauris volutpat auctor est, at venenatis orci porttitor sit amet. Proin vulputate interdum justo
+            tincidunt imperdiet. Donec malesuada quam et metus rutrum, sed porttitor tortor fringilla. Morbi in ex ut leo ullamcorper
+            blandit. Morbi elementum condimentum molestie. Sed ultricies fermentum tortor, nec fringilla velit mollis nec. Vestibulum
+            ac nisl odio. Maecenas eleifend et sem eget porttitor. Curabitur rhoncus quam magna. Duis eu magna quis diam venenatis egestas.
+            Proin at erat porta, feugiat lorem non, rhoncus tortor. Nullam tincidunt iaculis leo. Donec at elit quam. Sed pretium dolor
+            non ex ornare vehicula. Vivamus finibus eu ligula nec convallis. Vivamus quis rhoncus risus, lacinia vestibulum mi. Maecenas
+            felis ipsum, iaculis quis eros in, ullamcorper condimentum turpis. Cras quis bibendum enim. Donec consequat arcu sed mi vehicula
+            interdum. Vivamus sapien tellus, eleifend eget ultrices id, feugiat nec dui. Maecenas nec justo sed neque pulvinar hendrerit
+            sed sit amet eros. Aenean porta massa sit amet mauris vestibulum aliquam. Morbi vestibulum sapien sit amet velit interdum
+            mattis. Quisque ullamcorper maximus sem, quis dictum sapien auctor vitae. Proin quis diam quis elit tristique consequat eget
+            et mi. Curabitur ac feugiat nibh, nec malesuada nisl. Mauris gravida sollicitudin felis ut ullamcorper. Donec lorem nulla,
+            congue ut porttitor sit amet, lobortis non ex. Cras sagittis est vel rhoncus finibus. Cras eget urna non quam venenatis feugiat.
+            Praesent magna odio, facilisis eu blandit ultricies, venenatis mattis sapien. Aliquam faucibus congue pharetra. In elementum
+            eget odio at lacinia. Nulla tincidunt vehicula neque ornare interdum. Nullam ut facilisis nisl, ut vulputate mi. Curabitur
+            in auctor mi. Phasellus malesuada faucibus odio in tincidunt. Aliquam elementum diam vitae turpis facilisis ullamcorper.
+            Donec ac orci viverra, efficitur ante nec, consectetur dui. Integer vestibulum, lacus a convallis tempor, mi nunc rutrum
+            ipsum, et pellentesque tellus nisi id quam. Fusce vitae justo at risus fermentum dapibus quis a diam. Quisque a felis ut
+            ipsum efficitur ultricies. Nulla maximus, mauris vitae molestie eleifend, diam massa egestas neque, at efficitur elit sem
+            at velit. Pellentesque elementum, eros a tristique lobortis, lacus quam aliquam ex, eu elementum leo tellus a leo. Nam blandit,
+            eros sed dictum faucibus, libero mauris rutrum augue, sit amet pulvinar nibh quam at mauris. Praesent at elit in tellus bibendum
+            ornare. Sed at erat elit. Suspendisse potenti. Donec dignissim scelerisque tortor pellentesque malesuada. Class aptent taciti
+            sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In a tellus augue. Maecenas nec gravida lacus. Aliquam
+            porttitor semper varius. Pellentesque egestas faucibus venenatis. Sed efficitur purus id velit blandit commodo. Nulla in
+            varius odio. Curabitur fringilla vel nibh eget rhoncus. Integer lacinia mollis commodo. Sed vel accumsan mauris. Fusce maximus
+            nulla eu augue vestibulum mollis. Duis interdum ante purus, sit amet viverra quam gravida quis. Donec semper magna sed lacinia
+            laoreet. Vivamus sed orci sed nulla hendrerit laoreet. Aenean venenatis, nisl eget auctor posuere, urna est pulvinar felis,
+            id pellentesque libero ipsum non nulla. Nunc arcu nisi, suscipit non pharetra quis, facilisis sit amet justo. Nunc scelerisque
+            quis nisl vitae egestas. Ut euismod turpis eros. Maecenas luctus mattis nisi eu volutpat. Pellentesque ac facilisis turpis.
+            Suspendisse et facilisis mi, a condimentum ante. In ullamcorper metus est, a ornare tortor sagittis ut. Phasellus ac ante
+            malesuada, elementum lectus quis, porttitor tortor. Nulla consequat arcu non mollis hendrerit. Proin mattis eleifend turpis,
+            sit amet luctus lacus blandit nec. Maecenas quis tincidunt mi. Sed aliquam ipsum nec eros pretium ultricies. Donec sollicitudin
+            nisl lorem, eu ornare dolor dapibus vel. Fusce rutrum metus ut libero laoreet dictum. Nunc sit amet lorem in odio suscipit
+            facilisis. Curabitur dolor nibh, pretium ut ante id, blandit mollis mi. Fusce vulputate risus magna, eget venenatis nulla
+            commodo in. Ut tempor ex felis, vel sollicitudin ipsum volutpat at. Donec interdum ultrices molestie. Nunc a viverra massa.
+            Praesent viverra leo eu tellus ultricies, quis consectetur erat vulputate. Suspendisse ut ullamcorper velit. Pellentesque
+            habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin a mollis arcu. Morbi elit dolor, mattis
+            vel pellentesque et, sodales ac urna. Nam scelerisque iaculis odio, at accumsan urna convallis ut. Quisque non nulla et felis
+            rhoncus ullamcorper sed non velit. In sit amet vulputate diam. Nunc scelerisque consectetur lacus, vel pulvinar sapien laoreet
+            vel. Phasellus suscipit nisi quam, et vehicula leo sagittis placerat. Phasellus velit purus, euismod eget dui a, euismod
+            varius purus. In eget tincidunt leo. Vivamus eget libero nibh. Sed risus nisi, tempus nec velit eget, aliquam posuere turpis.
+            Morbi eget justo rhoncus, lobortis diam eu, porttitor est. Nullam diam ante, placerat vel enim vel, consectetur posuere mauris.
+            Nunc a consequat tellus. In feugiat, turpis vel facilisis molestie, sem diam vehicula lacus, ut placerat lorem odio et arcu.
+            Mauris id risus quis felis posuere rutrum ac vel massa. Mauris aliquam libero at molestie convallis. Nulla neque velit, vestibulum
+            eget malesuada eu, tristique pretium ligula. Maecenas iaculis, lectus vitae dignissim tempus, nisi justo commodo ipsum, vitae
+            lobortis lorem enim sit amet purus. Proin congue blandit erat, ut vulputate libero bibendum id. Nulla facilisi. Aenean fermentum
+            id libero vel faucibus. Proin semper enim et velit ornare molestie at eu lacus. Aenean consectetur augue id lectus pulvinar
+            gravida vel vel turpis. Aenean eget fermentum felis. Nam laoreet tellus in urna facilisis, sed pulvinar turpis euismod. Ut
+            faucibus arcu sit amet odio blandit, a ultrices dui fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        </p>
+    </main>
+
+    <!-- scripts -->
+    <script>
+        var headerProduct = document.querySelector('.header--product');
+        var headerProductPosition = headerProduct.offsetTop;
+        var headerGlobal = document.querySelector('.header--global');
+        var headerGlobalHeight = headerGlobal.offsetHeight;
+
+        var btnMenu = document.querySelector('.btn-menu');
+        var btnMenuCaret = document.querySelector('.caret');
+        var navGlobal = document.querySelector('.nav-global');
+        var navProduct = document.querySelector('.nav-product');
+        var productMenuItem = document.querySelectorAll('.nav-product');
+        var lastScrollPosition = 0;
+
+        // scroll listener for product heading positioning as fixed
+        window.addEventListener('scroll', function() {
+            var currentPosition = window.pageYOffset;
+            
+            // add sticky class to product header when the current location is greate than the top offset of the produt header
+            if (currentPosition >= headerProductPosition) {
+                headerProduct.classList.add("sticky");
+            }
+
+            // if scrolling up, add/remove classes to headers
+            if (currentPosition < lastScrollPosition) {
+                headerGlobal.classList.add('sticky');
+                headerProduct.classList.remove('pushUp');
+                headerProduct.classList.add('pushDown');
+                btnMenuCaret.classList.remove('invert');
+
+                // if scrolled again to the top, reset classes of headers as on page loat / remove classes
+                if (currentPosition == 0 ) {
+                    headerGlobal.classList.remove('sticky');
+                    headerProduct.classList.remove('sticky', 'pushDown');
+                }
+            // else when scrolled down, add/remove classes
+            } else {
+                headerProduct.classList.remove('pushDown');
+                headerProduct.classList.add('pushUp');
+                headerGlobal.classList.remove('onTop');
+                btnMenuCaret.classList.remove('invert');
+
+            }
+
+            // if the global menu is open while scrolling, close the menu
+            if (navGlobal.classList.contains('show')) {
+                navGlobal.classList.remove('show');
+                navGlobal.classList.add('hide');
+            }
+
+            // update to scrolled position
+            lastScrollPosition = currentPosition;
+        }, false);
+
+        // global menu click listener for showing global navigation on mobile devices
+        btnMenu.addEventListener('click', function(e) { 
+            e.preventDefault();
+            navGlobal.classList.remove('initial-hide'); // used to hide the animation during page load
+            navGlobal.classList.toggle('show');
+            navGlobal.classList.toggle('hide');
+            headerGlobal.classList.toggle('onTop');
+            btnMenuCaret.classList.toggle('invert');
+        });
+
+        // insert the current active menu item into the placeholder
+        var activeProductMenuItem = document.querySelector('.nav-product > .menu-item.active');
+        var productMenuLabelTitle = document.querySelector('.menu-label > .menu-title-placeholder');
+        productMenuLabelTitle.innerHTML = activeProductMenuItem.innerHTML;
+
+
+        // product menu label click listener for dosplaying the menu on mobile devices
+        var productMenuLabel = document.querySelector('.menu-label');
+        productMenuLabel.addEventListener('click', function() {
+            this.classList.add('hide');
+            navProduct.classList.add('product-menu');
+
+            // click listener for each menu item
+            var productMenuItems = document.querySelectorAll('.nav-product.product-menu > .menu-item');
+            productMenuItems.forEach(function(menuItem) { 
+                menuItem.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // assign current .active element, and remove class .active
+                    var activeProductMenuItem = document.querySelector('.nav-product > .menu-item.active');
+                    activeProductMenuItem.classList.remove('active');
+
+                    // add class .active to clicked menu item
+                    this.classList.add('active');
+
+                    // update the menu label title
+                    productMenuLabelTitle.innerHTML = this.innerHTML;
+
+                    // remove classes; hide the Product menu and show again the menu albel title with caret
+                    navProduct.classList.remove('product-menu');
+                    productMenuLabel.classList.remove('hide');
+                });
+            });
+
+
+        });
+
+    </script>
+</body>
+</html>
